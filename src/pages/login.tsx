@@ -59,7 +59,7 @@ export function Login() {
             <Button
               key={role}
               variant={selectedRole === role ? 'default' : 'outline'}
-              className="w-full"
+              className="w-full text-white"
               onClick={() => setSelectedRole(role)}
             >
               {role}
