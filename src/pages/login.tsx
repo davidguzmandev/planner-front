@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import type { User } from "@/types";
 import { useState } from "react";
 import { useAsync } from "@/hooks/useAsync";
+import { LoginForm } from "@/components/login-form"
 
 //Mapa de Rol
 const roleToEmailMap: Record<User["role"], string> = {
@@ -21,7 +22,7 @@ async function loginByEmail(email: string): Promise<{
   user: User;
   redirectUrl?: string;
 }> {
-  const res = await fetch(`${backendUrl}/login`, {
+  const res = await fetch(`${backendUrl}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email }),

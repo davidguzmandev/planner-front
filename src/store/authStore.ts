@@ -1,11 +1,6 @@
 import { create } from "zustand";
+import { User } from "@/types/user"; // Adjust the import path as necessary
 
-interface User {
-    id: string;
-    name: string;
-    email: string;
-    role: 'Production Planner' | 'Quality Inspector' | 'Administrator';
-}
 
 interface AuthState {
     isAuthenticated: boolean;

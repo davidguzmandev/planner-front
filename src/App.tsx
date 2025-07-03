@@ -1,7 +1,8 @@
 import './App.css'
 import { ThemeProvider } from "@/components/theme-provider"
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { Login } from "./pages/login"
+import { Dashboard } from "./pages/dashboard"
 
 function App() {
 
@@ -10,6 +11,7 @@ function App() {
       <Router>
         <Routes>
           <Route path='/' element={<Login />} />
+          <Route path='/dashboard' element={<Dashboard />} />
         </Routes>
       </Router>
     </ThemeProvider>
