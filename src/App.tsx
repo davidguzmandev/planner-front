@@ -1,13 +1,13 @@
-import './App.css'
+import './index.css'
 import { ThemeProvider } from "@/components/theme-provider"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { Login } from "./pages/login"
-import { Dashboard } from "./pages/dashboard"
+import Dashboard from "./pages/dashboard"
 
 function App() {
 
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <ThemeProvider defaultTheme="dark" >
       <Router>
         <Routes>
           <Route path='/' element={<Login />} />
