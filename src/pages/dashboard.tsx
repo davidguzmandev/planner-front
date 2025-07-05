@@ -1,4 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar"
+import useAuthStore from "@/store/authStore";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,9 +16,14 @@ import {
 } from "@/components/ui/sidebar"
 
 export default function Dashboard() {
+
+  const user = useAuthStore((state) =>  state.user);
+  if (!user) {
+    return <p>You must be logged in to view the dashboard.</p>;
+  }
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar user={user} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">

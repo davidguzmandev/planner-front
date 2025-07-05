@@ -9,7 +9,7 @@ import { useAsync } from "@/hooks/useAsync";
 const roleToEmailMap: Record<User["role"], string> = {
   "Production Planner": "planner@fujisemec.com",
   "Quality Inspector": "quality@fujisemec.com",
-  Administrator: "admin@fujisemec.com",
+  "Administrator": "admin@fujisemec.com",
 };
 const roles = Object.keys(roleToEmailMap) as User["role"][];
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -55,7 +55,7 @@ export function Login() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center max-h-full">
       <h1 className="text-3xl font-semibold mb-8 text-white">Login</h1>
 
       <div className="space-y-4 w-full max-w-sm">
@@ -63,7 +63,7 @@ export function Login() {
           <Button
             key={role}
             variant={selectedRole === role ? "default" : "outline"}
-            className="w-full"
+            className="w-full cursor-pointer"
             onClick={() => setSelectedRole(role)}>
             {role}
           </Button>
@@ -71,7 +71,7 @@ export function Login() {
 
         <Button
           onClick={handleLogin}
-          className="w-full"
+          className="w-full  cursor-pointer"
           disabled={!selectedRole || loading}>
           {loading ? "Logging in..." : `Login as ${selectedRole ?? "..."}`}
         </Button>
