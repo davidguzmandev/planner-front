@@ -1,11 +1,8 @@
 import * as React from "react"
 import {
-  AudioWaveform,
   BookOpen,
   Bot,
-  Command,
   Frame,
-  GalleryVerticalEnd,
   Map,
   PieChart,
   Settings2,
@@ -42,7 +39,7 @@ const data = {
       items: [
         {
           title: "Parts",
-          url: "#",
+          url: "/dashboard/parts",
         },
         {
           title: "Delivery Plan",

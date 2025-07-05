@@ -2,14 +2,14 @@ import useAuthStore from "@/store/authStore";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import type { User } from "@/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAsync } from "@/hooks/useAsync";
 
 //Mapa de Rol
 const roleToEmailMap: Record<User["role"], string> = {
   "Production Planner": "planner@fujisemec.com",
   "Quality Inspector": "quality@fujisemec.com",
-  "Administrator": "admin@fujisemec.com",
+  Administrator: "admin@fujisemec.com",
 };
 const roles = Object.keys(roleToEmailMap) as User["role"][];
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -34,7 +34,7 @@ async function loginByEmail(email: string): Promise<{
   return data;
 }
 
-export function Login() {
+export default function Login() {
   const [selectedRole, setSelectedRole] = useState<User["role"] | null>(null);
   const {
     execute: doLogin,
@@ -42,7 +42,14 @@ export function Login() {
     error,
   } = useAsync<[string], { user: User; redirectUrl?: string }>(loginByEmail);
   const login = useAuthStore((s) => s.login);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleLogin = async () => {
     if (!selectedRole) return;
