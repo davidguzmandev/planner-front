@@ -102,10 +102,6 @@ const data = {
           title: "Billing",
           url: "#",
         },
-        {
-          title: "Limits",
-          url: "#",
-        },
       ],
     },
   ],
