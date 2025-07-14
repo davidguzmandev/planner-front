@@ -10,15 +10,12 @@ export default function Parts() {
   const columns = [
     { header: "Part Number", accessor: "part_number" },
     { header: "Description", accessor: "description" },
-    { header: "Project ID", accessor: "project_id" },
-    { header: "Product ID", accessor: "product_id" },
-    { header: "Coefficient", accessor: "coefficient" },
+    { header: "Project", accessor: "project_name" },
+    { header: "Product", accessor: "product_name" },
     { header: "Comments", accessor: "comments" },
-    { header: "Destination ID", accessor: "destination_id" },
+    { header: "Destination", accessor: "destination_name" },
     { header: "Quantity Requested", accessor: "quantity_requested" },
     { header: "Quantity Remaining", accessor: "quantity_remaining" },
-    { header: "Created At", accessor: "created_at" },
-    { header: "Updated At", accessor: "updated_at" },
   ];
 
   if (loading) return <div>Loading...</div>;
@@ -27,9 +24,10 @@ export default function Parts() {
   return (
     <>
       <div className="p-6">
-        <h1 className="text-2xl font-bold mb-4">Listado de Parts</h1>
+        <h1 className="text-2xl font-bold mb-4">Parts List</h1>
         <DataTable columns={columns} data={parts} />
       </div>
+
       <SidebarInset>
         <div className="flex flex-1 flex-col">
           <div className="@container/main flex flex-1 flex-col gap-2">

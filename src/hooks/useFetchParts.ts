@@ -36,6 +36,6 @@ export function useFetchParts() {
     return () => {
       controller.abort(); // Cleanup function to abort fetch on unmount
     };
-  }, []);
+  }, [backendUrl]);
   return { data, loading, error };
 }
