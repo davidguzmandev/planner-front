@@ -1,5 +1,5 @@
 // src/pages/Parts.tsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DataTable } from "@/components/dataTable";
 import { useFetchParts } from "@/hooks/useFetchParts";
 import { useUpdatePart } from "@/hooks/useUpdatePart";
@@ -8,6 +8,11 @@ import { PartFormDialog } from "@/components/partFormDialog";
 import { Button } from "@/components/ui/button";
 import type { Part } from "@/types";
 
+interface Option {
+  id: number;
+  name: string;
+}
+
 export default function Parts() {
   const { data: parts, loading, error, fetchData } = useFetchParts();
   const { updatePart, loading: updating, error: updateError } = useUpdatePart();
@@ -15,6 +20,25 @@ export default function Parts() {
 
   const [editing, setEditing] = useState<Part | null>(null);
   const [creatingPart, setCreatingPart] = useState(false);
+
+  const [projects, setProjects] = useState<Option[]>([]);
+  const [products, setProducts] = useState<Option[]>([]);
+  const [destinations, setDestinations] = useState<Option[]>([]);
+
+  useEffect(() => {
+    async function loadOptions() {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL;
+      const [pj, pr, dt] = await Promise.all([
+        fetch(`${backendUrl}/projects`).then((r) => r.json()),
+        fetch(`${backendUrl}/products`).then((r) => r.json()),
+        fetch(`${backendUrl}/destinations`).then((r) => r.json()),
+      ]);
+      setProjects(pj);
+      setProducts(pr);
+      setDestinations(dt);
+    }
+    loadOptions();
+  }, []);
 
   const columns = [
     { header: "Part Number", accessor: "part_number" },

@@ -9,6 +9,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { Part } from "@/types";
 
+interface SelectField {
+  name: keyof Omit<Part, "id" | "created_at" | "updated_at">;
+  label: string;
+  options: { id: number; name: string }[];
+}
+
 interface PartFormDialogProps {
   open: boolean;
   title: string;
@@ -17,6 +23,7 @@ interface PartFormDialogProps {
     Part,
     "id" | "created_at" | "updated_at"
   >)[];
+  selectFields?: SelectField[];
   loading: boolean;
   error: string | null;
   onOpenChange: (open: boolean) => void;
@@ -30,6 +37,7 @@ export function PartFormDialog({
   title,
   initialData = {},
   editableFields,
+  selectFields,
   loading,
   error,
   onOpenChange,
@@ -50,25 +58,56 @@ export function PartFormDialog({
             e.preventDefault();
             const form = e.currentTarget;
             const formData = new FormData(form);
-            // Construimos el payload sólo con campos editables
-            const payload = editableFields.reduce((acc, field) => {
+            // Build payload from selects + inputs
+            const payload = {} as any;
+
+            // handle select fields first
+            selectFields?.forEach((sf) => {
+              const raw = formData.get(sf.name as string);
+              payload[sf.name] = raw ? Number(raw) : undefined;
+            });
+
+            // then inputs
+            editableFields.forEach((field) => {
               const raw = formData.get(field as string);
-              // detectar números vs strings
-              const value =
-                typeof initialData[field] === "number"
-                  ? Number(raw)
-                  : String(raw);
-              return { ...acc, [field]: value };
-            }, {} as any);
+              if (raw != null) {
+                const orig = initialData[field];
+                payload[field] =
+                  typeof orig === "number" ? Number(raw) : String(raw);
+              }
+            });
 
             try {
               await onSubmit(payload);
             } catch {
-              // error gestionado con `error` prop
+              // error shown via `error` prop
             }
           }}>
+          {/* Render dropdowns */}
+          {selectFields?.map((sf) => (
+            <div key={String(sf.name)}>
+              <label className="block text-xs font-medium mb-1">
+                {sf.label}
+              </label>
+              <select
+                name={String(sf.name)}
+                defaultValue={initialData[sf.name]?.toString() ?? ""}
+                className="w-full p-2 border rounded">
+                <option value="" disabled>
+                  Select {sf.label}
+                </option>
+                {sf.options.map((opt) => (
+                  <option key={opt.id} value={opt.id}>
+                    {opt.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ))}
+
+          {/* Render text/number inputs */}
           {editableFields.map((field) => (
-            <div key={field as string}>
+            <div key={String(field)}>
               <label className="block text-xs font-medium mb-1">
                 {String(field)
                   .split("_")
@@ -76,7 +115,7 @@ export function PartFormDialog({
                   .join(" ")}
               </label>
               <Input
-                name={field as string}
+                name={String(field)}
                 defaultValue={
                   initialData[field] != null ? String(initialData[field]) : ""
                 }
