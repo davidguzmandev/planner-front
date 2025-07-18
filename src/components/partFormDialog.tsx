@@ -48,8 +48,6 @@ export function PartFormDialog({
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
-          <DialogClose asChild>
-          </DialogClose>
         </DialogHeader>
 
         <form
@@ -83,27 +81,6 @@ export function PartFormDialog({
               // error shown via `error` prop
             }
           }}>
-          {/* Render dropdowns */}
-          {selectFields?.map((sf) => (
-            <div key={String(sf.name)}>
-              <label className="block text-xs font-medium mb-1">
-                {sf.label}
-              </label>
-              <select
-                name={String(sf.name)}
-                defaultValue={initialData[sf.name]?.toString() ?? ""}
-                className="w-full p-2 border rounded">
-                <option value="" disabled>
-                  Select {sf.label}
-                </option>
-                {sf.options.map((opt) => (
-                  <option key={opt.id} value={opt.id}>
-                    {opt.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ))}
 
           {/* Render text/number inputs */}
           {editableFields.map((field) => (
@@ -123,14 +100,36 @@ export function PartFormDialog({
             </div>
           ))}
 
+          {/* Render dropdowns */}
+          {selectFields?.map((sf) => (
+            <div key={String(sf.name)}>
+              <label className="block text-xs font-medium mb-1">
+                {sf.label}
+              </label>
+              <select
+                name={String(sf.name)}
+                defaultValue={initialData[sf.name]?.toString() ?? ""}
+                className="w-full p-2 border rounded text-muted-foreground">
+                <option value="" disabled>
+                  Select {sf.label}
+                </option>
+                {sf.options.map((opt) => (
+                  <option key={opt.id} value={opt.id}>
+                    {opt.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ))}
+
           {error && <p className="text-red-600 text-sm">{error}</p>}
 
           <div className="flex justify-end space-x-2 pt-4">
-            <Button type="submit" disabled={loading}>
+            <Button className="cursor-pointer" type="submit" disabled={loading}>
               {loading ? `${title.split(" ")[0]}ing…` : title.split(" ")[0]}
             </Button>
             <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline" className="cursor-pointer">Cancel</Button>
             </DialogClose>
           </div>
         </form>

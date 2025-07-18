@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import { Pencil } from 'lucide-react';
 
 interface Column<T> {
   header: string
@@ -46,9 +47,10 @@ export function DataTable<T extends { id: string }>({
                     <Button
                       variant="link"
                       size="sm"
+                      className="cursor-pointer"
                       onClick={() => onEdit(row)}
                     >
-                      Editar
+                      <Pencil strokeWidth={2.75}/>
                     </Button>
                   </td>
                 )}

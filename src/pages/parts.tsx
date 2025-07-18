@@ -28,6 +28,7 @@ export default function Parts() {
   useEffect(() => {
     async function loadOptions() {
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
       const [pj, pr, dt] = await Promise.all([
         fetch(`${backendUrl}/projects`).then((r) => r.json()),
         fetch(`${backendUrl}/products`).then((r) => r.json()),
@@ -66,8 +67,16 @@ export default function Parts() {
     <>
       {/* Header + Create Button */}
       <div className="flex justify-between items-center p-4">
-        <h1 className="text-xl font-bold">Parts</h1>
-        <Button onClick={() => setCreatingPart(true)}>Create Part</Button>
+        <div className="flex items-center space-x-2">
+          <h1 className="text-xl font-bold">Parts</h1>
+          <div
+            data-orientation="vertical"
+            role="none"
+            data-slot="separator"
+            className="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:w-px mr-2 data-[orientation=vertical]:h-4"></div>
+          <p className="text-muted-foreground">{parts.length} parts found</p>
+        </div>
+        <Button className="mr-20 cursor-pointer font-bold" onClick={() => setCreatingPart(true)}>+</Button>
       </div>
 
       {/* Data Table */}
@@ -79,6 +88,15 @@ export default function Parts() {
         title="Edit Part"
         initialData={editing ?? {}}
         editableFields={editableFields}
+        selectFields={[
+          { name: "project_id", label: "Project", options: projects },
+          { name: "product_id", label: "Product", options: products },
+          {
+            name: "destination_id",
+            label: "Destination",
+            options: destinations,
+          },
+        ]}
         loading={updating}
         error={updateError}
         onOpenChange={(open) => !open && setEditing(null)}
@@ -96,17 +114,20 @@ export default function Parts() {
         title="Create New Part"
         initialData={{} as any}
         editableFields={editableFields}
+        selectFields={[
+          { name: "project_id", label: "Project", options: projects },
+          { name: "product_id", label: "Product", options: products },
+          {
+            name: "destination_id",
+            label: "Destination",
+            options: destinations,
+          },
+        ]}
         loading={creating}
         error={createError}
         onOpenChange={(open) => !open && setCreatingPart(false)}
         onSubmit={async (newPart) => {
-          // Añade aquí los IDs de proyecto/producto/destino
-          await createPart({
-            ...newPart,
-            project_id: 1,
-            product_id: 1,
-            destination_id: 1,
-          });
+          await createPart(newPart);
           setCreatingPart(false);
           await fetchData();
         }}
