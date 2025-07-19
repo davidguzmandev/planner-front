@@ -10,12 +10,14 @@ interface DataTableProps<T> {
   columns: Column<T>[]
   data: T[]
   onEdit?: (row: T) => void
+  onDelete?: (id: string) => void
 }
 
 export function DataTable<T extends { id: string }>({
   columns,
   data,
   onEdit,
+  onDelete,
 }: DataTableProps<T>) {
   return (
     <div className="rounded-lg overflow-hidden border border-zinc-800 ml-10 mr-20">
@@ -56,7 +58,7 @@ export function DataTable<T extends { id: string }>({
                       variant="link"
                       size="sm"
                       className="cursor-pointer"
-                      onClick={() => onEdit(row)}
+                      onClick={() => onDelete?.(row.id)}
                     >
                       <Trash2  strokeWidth={2.75}/>
                     </Button>

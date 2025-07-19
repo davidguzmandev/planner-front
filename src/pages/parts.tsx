@@ -4,6 +4,7 @@ import { DataTable } from "@/components/dataTable";
 import { useFetchParts } from "@/hooks/useFetchParts";
 import { useUpdatePart } from "@/hooks/useUpdatePart";
 import { useCreatePart } from "@/hooks/useCreatePart";
+import { useDeletePart } from "@/hooks/useDeletePart";
 import { PartFormDialog } from "@/components/partFormDialog";
 import { Button } from "@/components/ui/button";
 import type { Part } from "@/types";
@@ -17,6 +18,7 @@ export default function Parts() {
   const { data: parts, loading, error, fetchData } = useFetchParts();
   const { updatePart, loading: updating, error: updateError } = useUpdatePart();
   const { createPart, loading: creating, error: createError } = useCreatePart();
+  const { deletePart, loading: deleting, error: deleteError } = useDeletePart();
 
   const [editing, setEditing] = useState<Part | null>(null);
   const [creatingPart, setCreatingPart] = useState(false);
@@ -40,6 +42,16 @@ export default function Parts() {
     }
     loadOptions();
   }, []);
+
+  async function handleDelete(id: string) {
+    if (!confirm("¿Eliminar esta parte?")) return;
+    try {
+      await deletePart(id);
+      await fetchData();
+    } catch {
+      /* el error se muestra con deleteError */
+    }
+  }
 
   const columns = [
     { header: "Part Number", accessor: "part_number" },
@@ -76,11 +88,20 @@ export default function Parts() {
             className="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:w-px mr-2 data-[orientation=vertical]:h-4"></div>
           <p className="text-muted-foreground">{parts.length} parts found</p>
         </div>
-        <Button className="mr-20 cursor-pointer font-bold" onClick={() => setCreatingPart(true)}>+</Button>
+        <Button
+          className="mr-20 cursor-pointer font-bold"
+          onClick={() => setCreatingPart(true)}>
+          +
+        </Button>
       </div>
 
       {/* Data Table */}
-      <DataTable columns={columns} data={parts} onEdit={setEditing} />
+      <DataTable
+        columns={columns}
+        data={parts}
+        onEdit={setEditing}
+        onDelete={handleDelete}
+      />
 
       {/* Edit Part Dialog */}
       <PartFormDialog
