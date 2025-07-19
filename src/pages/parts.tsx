@@ -7,7 +7,15 @@ import { useCreatePart } from "@/hooks/useCreatePart";
 import { useDeletePart } from "@/hooks/useDeletePart";
 import { PartFormDialog } from "@/components/partFormDialog";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogClose,
+} from "@/components/ui/dialog";
 import type { Part } from "@/types";
+import { set } from "zod";
 
 interface Option {
   id: number;
@@ -19,6 +27,7 @@ export default function Parts() {
   const { updatePart, loading: updating, error: updateError } = useUpdatePart();
   const { createPart, loading: creating, error: createError } = useCreatePart();
   const { deletePart, loading: deleting, error: deleteError } = useDeletePart();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const [editing, setEditing] = useState<Part | null>(null);
   const [creatingPart, setCreatingPart] = useState(false);
@@ -43,10 +52,11 @@ export default function Parts() {
     loadOptions();
   }, []);
 
-  async function handleDelete(id: string) {
-    if (!confirm("¿Eliminar esta parte?")) return;
+  async function handleDelete() {
+    if (!deletingId) return;
     try {
-      await deletePart(id);
+      await deletePart(deletingId);
+      setDeletingId(null);
       await fetchData();
     } catch {
       /* el error se muestra con deleteError */
@@ -100,7 +110,7 @@ export default function Parts() {
         columns={columns}
         data={parts}
         onEdit={setEditing}
-        onDelete={handleDelete}
+        onDelete={setDeletingId}
       />
 
       {/* Edit Part Dialog */}
@@ -153,6 +163,36 @@ export default function Parts() {
           await fetchData();
         }}
       />
+
+      {deleteError && (
+        <p className="text-red-600 text-sm mt-2">{deleteError}</p>
+      )}
+
+      <Dialog
+        open={!!deletingId}
+        onOpenChange={(open) => !open && setDeletingId(null)}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+          </DialogHeader>
+          <p className="mt-2">Are you sure you want to delete this part?</p>
+          {deleteError && (
+            <p className="text-red-600 text-sm mt-2">{deleteError}</p>
+          )}
+          <div className="mt-4 flex justify-end space-x-2">
+            <Button
+              variant="outline"
+              onClick={() => setDeletingId(null)}
+              disabled={deleting}
+              className="cursor-pointer">
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDelete} className="cursor-pointer">
+              {deleting ? "Deleting..." : "Delete"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
