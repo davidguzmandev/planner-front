@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { DataTable } from "@/components/dataTable";
+import { DeliveryTable } from "@/components/deliveryTable";
 import { useFetchParts } from "@/hooks/useFetchParts";
 import { useUpdatePart } from "@/hooks/useUpdatePart";
 import { useCreatePart } from "@/hooks/useCreatePart";
@@ -104,7 +104,7 @@ export default function Parts() {
       </div>
 
       {/* Data Table */}
-      <DataTable
+      <DeliveryTable
         columns={columns}
         data={parts}
         onEdit={setEditing}

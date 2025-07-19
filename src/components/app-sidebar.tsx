@@ -43,7 +43,7 @@ const data = {
         },
         {
           title: "Delivery Plan",
-          url: "#",
+          url: "/dashboard/delivery-plan",
         },
       ],
     },
