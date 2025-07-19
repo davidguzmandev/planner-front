@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { Pencil } from 'lucide-react';
+import { Pencil, Trash2 } from 'lucide-react';
 
 interface Column<T> {
   header: string
@@ -25,7 +25,7 @@ export function DataTable<T extends { id: string }>({
             <tr>
               {onEdit && (
                 <th className="px-6 py-3 text-left text-sm font-medium text-foreground whitespace-nowrap">
-                  Acciones
+                  Actions
                 </th>
               )}
               {columns.map((col) => (
@@ -43,7 +43,7 @@ export function DataTable<T extends { id: string }>({
               <tr key={row.id}>
 
                 {onEdit && (
-                  <td className="px-6 py-4 text-sm whitespace-nowrap">
+                  <td className="text-center py-4 text-sm whitespace-nowrap">
                     <Button
                       variant="link"
                       size="sm"
@@ -51,6 +51,14 @@ export function DataTable<T extends { id: string }>({
                       onClick={() => onEdit(row)}
                     >
                       <Pencil strokeWidth={2.75}/>
+                    </Button>
+                    <Button
+                      variant="link"
+                      size="sm"
+                      className="cursor-pointer"
+                      onClick={() => onEdit(row)}
+                    >
+                      <Trash2  strokeWidth={2.75}/>
                     </Button>
                   </td>
                 )}
