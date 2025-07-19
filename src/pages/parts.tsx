@@ -1,4 +1,3 @@
-// src/pages/Parts.tsx
 import { useEffect, useState } from "react";
 import { DataTable } from "@/components/dataTable";
 import { useFetchParts } from "@/hooks/useFetchParts";
@@ -12,7 +11,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogClose,
 } from "@/components/ui/dialog";
 import type { Part } from "@/types";
 import { set } from "zod";
