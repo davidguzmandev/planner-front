@@ -88,7 +88,7 @@ export default function Parts() {
   return (
     <>
       {/* Header + Create Button */}
-      <div className="flex justify-between items-center p-4">
+      <div className="flex items-center p-4">
         <div className="flex items-center space-x-2">
           <h1 className="text-xl font-bold">Parts</h1>
           <div
@@ -96,12 +96,12 @@ export default function Parts() {
             role="none"
             data-slot="separator"
             className="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:w-px mr-2 data-[orientation=vertical]:h-4"></div>
-          <p className="text-muted-foreground">{parts.length} parts found</p>
+          <p className="text-muted-foreground mr-20">{parts.length} parts found</p>
         </div>
         <Button
-          className="mr-20 cursor-pointer font-bold"
+          className="mr-20 cursor-pointer"
           onClick={() => setCreatingPart(true)}>
-          +
+          + Create New Part
         </Button>
       </div>
 
