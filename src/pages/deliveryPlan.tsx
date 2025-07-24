@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { DataTable } from "@/components/dataTable";
-import { useFetchParts } from "@/hooks/useFetchParts";
+import { useFetchDeliveryPlan } from "@/hooks/useFetchDeliveryPlan";
 import { useUpdatePart } from "@/hooks/useUpdatePart";
-import { useCreatePart } from "@/hooks/useCreatePart";
+import { useCreateDeliveryPlan } from "@/hooks/useCreateDeliveryPlan";
 import { useDeletePart } from "@/hooks/useDeletePart";
 import { PartFormDialog } from "@/components/partFormDialog";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { Part } from "@/types";
+import type { DeliveryPlan } from "@/types";
 import { set } from "zod";
 
 interface Option {
@@ -21,14 +21,14 @@ interface Option {
 }
 
 export default function DeliveryPlan() {
-  const { data: parts, loading, error, fetchData } = useFetchParts();
+  const { data: parts, loading, error, fetchData } = useFetchDeliveryPlan();
   const { updatePart, loading: updating, error: updateError } = useUpdatePart();
-  const { createPart, loading: creating, error: createError } = useCreatePart();
+  const { createDeliveryPlan, loading: creating, error: createError } = useCreateDeliveryPlan();
   const { deletePart, loading: deleting, error: deleteError } = useDeletePart();
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const [editing, setEditing] = useState<Part | null>(null);
-  const [creatingPart, setCreatingPart] = useState(false);
+  const [editing, setEditing] = useState<DeliveryPlan | null>(null);
+  const [creatingDeliveryPlan, setCreatingDeliveryPlan] = useState(false);
 
   const [projects, setProjects] = useState<Option[]>([]);
   const [products, setProducts] = useState<Option[]>([]);
@@ -63,21 +63,24 @@ export default function DeliveryPlan() {
 
   const columns = [
     { header: "Part Number", accessor: "part_number" },
-    { header: "Description", accessor: "description" },
-    { header: "Project", accessor: "project_name" },
-    { header: "Product", accessor: "product_name" },
-    { header: "Comments", accessor: "comments" },
-    { header: "Destination", accessor: "destination_name" },
-    { header: "Quantity Requested", accessor: "quantity_requested" },
-    { header: "Quantity Remaining", accessor: "quantity_remaining" },
+    { header: "Description", accessor: "part_description" },
+    { header: "Comments", accessor: "comment" },
+    { header: "To Inspect", accessor: "quantity_to_inspect" },
+    { header: "Inspected", accessor: "quantity_inspected" },
+    { header: "Rejected", accessor: "quantity_rejected" },
   ] as const;
 
   const editableFields = [
     "part_number",
     "description",
-    "comments",
-    "quantity_requested",
-    "quantity_remaining",
+    "week_number",
+    "year",
+    "priority_rank",
+    "inspection_date",
+    "comment",
+    "quantity_to_inspect",
+    "quantity_inspected",
+    "quantity_rejected",
   ] as const;
 
   if (loading) return <div>Loading...</div>;
@@ -98,8 +101,8 @@ export default function DeliveryPlan() {
         </div>
         <Button
           className="mr-20 cursor-pointer"
-          onClick={() => setCreatingPart(true)}>
-          + Create New Part
+          onClick={() => setCreatingDeliveryPlan(true)}>
+          + Add to Delivery Plan
         </Button>
       </div>
 
@@ -137,10 +140,10 @@ export default function DeliveryPlan() {
         }}
       />
 
-      {/* Create New Part Dialog */}
+      {/* Add part to Delivery Plan */}
       <PartFormDialog
-        open={creatingPart}
-        title="Create New Part"
+        open={creatingDeliveryPlan}
+        title="Add Part to Delivery Plan"
         initialData={{} as any}
         editableFields={editableFields}
         selectFields={[
@@ -154,10 +157,10 @@ export default function DeliveryPlan() {
         ]}
         loading={creating}
         error={createError}
-        onOpenChange={(open) => !open && setCreatingPart(false)}
+        onOpenChange={(open) => !open && setCreatingDeliveryPlan(false)}
         onSubmit={async (newPart) => {
-          await createPart(newPart);
-          setCreatingPart(false);
+          await createDeliveryPlan(newPart);
+          setCreatingDeliveryPlan(false);
           await fetchData();
         }}
       />
