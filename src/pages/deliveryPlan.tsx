@@ -120,15 +120,6 @@ export default function DeliveryPlan() {
         title="Edit Part"
         initialData={editing ?? {}}
         editableFields={editableFields}
-        selectFields={[
-          { name: "project_id", label: "Project", options: projects },
-          { name: "product_id", label: "Product", options: products },
-          {
-            name: "destination_id",
-            label: "Destination",
-            options: destinations,
-          },
-        ]}
         loading={updating}
         error={updateError}
         onOpenChange={(open) => !open && setEditing(null)}
@@ -146,15 +137,6 @@ export default function DeliveryPlan() {
         title="Add Part to Delivery Plan"
         initialData={{} as any}
         editableFields={editableFields}
-        selectFields={[
-          { name: "project_id", label: "Project", options: projects },
-          { name: "product_id", label: "Product", options: products },
-          {
-            name: "destination_id",
-            label: "Destination",
-            options: destinations,
-          },
-        ]}
         loading={creating}
         error={createError}
         onOpenChange={(open) => !open && setCreatingDeliveryPlan(false)}

@@ -37,7 +37,6 @@ export function PartFormDialog({
   title,
   initialData = {},
   editableFields,
-  selectFields,
   loading,
   error,
   onOpenChange,
@@ -58,12 +57,6 @@ export function PartFormDialog({
             const formData = new FormData(form);
             // Build payload from selects + inputs
             const payload = {} as any;
-
-            // handle select fields first
-            selectFields?.forEach((sf) => {
-              const raw = formData.get(sf.name as string);
-              payload[sf.name] = raw ? Number(raw) : undefined;
-            });
 
             // then inputs
             editableFields.forEach((field) => {
@@ -97,28 +90,6 @@ export function PartFormDialog({
                   initialData[field] != null ? String(initialData[field]) : ""
                 }
               />
-            </div>
-          ))}
-
-          {/* Render dropdowns */}
-          {selectFields?.map((sf) => (
-            <div key={String(sf.name)}>
-              <label className="block text-xs font-medium mb-1">
-                {sf.label}
-              </label>
-              <select
-                name={String(sf.name)}
-                defaultValue={initialData[sf.name]?.toString() ?? ""}
-                className="w-full p-2 border rounded text-muted-foreground">
-                <option value="" disabled>
-                  Select {sf.label}
-                </option>
-                {sf.options.map((opt) => (
-                  <option key={opt.id} value={opt.id}>
-                    {opt.name}
-                  </option>
-                ))}
-              </select>
             </div>
           ))}
 
